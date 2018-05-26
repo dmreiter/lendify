@@ -12,53 +12,60 @@ const app = express();
 
 const Promise = require('bluebird');
 
-// User.findOne({ username: 'bob' }, (err, user) => {
-//     const item = {
-//         name: 'hose',
-//         price: '$4',
-//         inprogress: false,
-//         desc: 'hosey',
-//         offerer: {
-//             id: user._id,
-//             iid: user.iid,
-//             username: user.username,
-//             ready: false
-//         },
-//     }
-//     const item2 = {
-//         name: 'bike',
-//         price: '$15',
-//         inprogress: false,
-//         desc: 'bikebikebike',
-//         offerer: {
-//             id: user._id,
-//             iid: user.iid,
-//             username: user.username,
-//             ready: false
-//         },
-//     }
-//     const item3 = {
-//         name: 'rake',
-//         price: '$5',
-//         inprogress: false,
-//         desc: 'snake',
-//         offerer: {
-//             id: user._id,
-//             iid: user.iid,
-//             username: user.username,
-//             ready: false
-//         },
-//     }
-//     Item.create(item, (err, item) => {
-//         console.log(item);
-//     });
-//     Item.create(item2, (err, item) => {
-//         console.log(item);
-//     });
-//     Item.create(item3, (err, item) => {
-//         console.log(item);
-//     });
-// });
+function seed(){
+    User.findOne({ username: 'bob' }, (err, user) => {
+        const item = {
+            name: 'hose',
+            price: '$4',
+            inprogress: false,
+            desc: 'hosey',
+            duration: 0,
+            offerer: {
+                id: user._id,
+                iid: user.iid,
+                username: user.username,
+                ready: false
+            },
+        }
+        const item2 = {
+            name: 'bike',
+            price: '$15',
+            inprogress: false,
+            desc: 'bikebikebike',
+            duration: 0,
+            offerer: {
+                id: user._id,
+                iid: user.iid,
+                username: user.username,
+                ready: false
+            },
+        }
+        const item3 = {
+            name: 'rake',
+            price: '$5',
+            inprogress: false,
+            desc: 'snake',
+            duration: 0,
+            offerer: {
+                id: user._id,
+                iid: user.iid,
+                username: user.username,
+                ready: false
+            },
+        }
+        Item.create(item, (err, item) => {
+            console.log(item);
+        });
+        Item.create(item2, (err, item) => {
+            console.log(item);
+        });
+        Item.create(item3, (err, item) => {
+            console.log(item);
+        });
+    });    
+}
+
+// seed();
 
 mongoose.connect(process.env.DB_URL);
 

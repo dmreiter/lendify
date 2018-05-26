@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Test</title>
+    </head>
+    <body>
+        <button id="testButton" type="button" name="button">Test</button>
+    </body>
+    <script type="text/javascript">
+        if (typeof web3 !== "undefined") {
+            web3 = new Web3(web3.currentProvider);
+        }
+        else {
+            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        }
+
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+
+        var contract = web3.eth.contract([
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "lenderAddress",
+				"type": "address"
+			},
+			{
+				"name": "borrowerAddress",
+				"type": "address"
+			},
+			{
+				"name": "duration",
+				"type": "uint256"
+			},
+			{
+				"name": "frozenAmount",
+				"type": "uint256"
+			}
+		],
+		"name": "createNewExchange",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "exchangeId",
+				"type": "uint256"
+			}
+		],
+		"name": "completeExchange",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "exchangeId",
+				"type": "uint256"
+			},
+			{
+				"name": "currentTime",
+				"type": "uint256"
+			}
+		],
+		"name": "lenderRequestsMoney",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	}
+]);
+
+    var contractObj = contract.at("0xd022b2e644c614bbb8391eae0db5d0182c779882");
+    console.log(contractObj);
+
+    document.querySelector("#testButton").addEventListener("click", function () {
+        contractObj.createNewExchange(web3.eth.accounts[0], "0x1A912a78E75AcBc0CB1a8fa67E077601E66d0549", 5000, 10000000, {from: "0x1A912a78E75AcBc0CB1a8fa67E077601E66d0549", value: web3.toWei(value, "ether")}, function (err, res) {});
+    });
+    </script>
+</html>

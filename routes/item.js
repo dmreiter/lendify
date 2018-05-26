@@ -6,6 +6,18 @@ const Item = require('../models/Item');
 const lib = require('lib')({ token: process.env.STDLIB_KEY });
 const Promise = require('bluebird');
 
+// web3.js contract connection
+var Web3 = require('web3');
+var web3 = new Web3();
+//Setting our provider for the ethereum network
+web3 = new Web3(new Web3.providers.HttpProvider("https://ropsten.infura.io/"));
+//Specify settings for our contract
+var ContractFromABI = web3.eth.contract([{"constant":false,"inputs":[{"name":"exchangeId","type":"uint256"}],"name":"completeExchange","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"lenderAddress","type":"address"},{"name":"borrowerAddress","type":"address"},{"name":"duration","type":"uint256"},{"name":"frozenAmount","type":"uint256"}],"name":"createNewExchange","outputs":[{"name":"","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"exchangeId","type":"uint256"}],"name":"lenderRequestsMoney","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]);
+//Specify the id of the contract on Ethereum network
+var contract = ContractFromABI.at('0xd022b2e644c614bbb8391eae0db5d0182c779882');
+var exchangeId = 0;
+
+
 app.post('/item/:id/ready', (req, res) => {
     Item.findOne({ _id: req.params.id }, async (err, item) => {
         if (req.body.ready == 'offerer') {
@@ -15,7 +27,8 @@ app.post('/item/:id/ready', (req, res) => {
             item.borrower.id = req.user._id;
             item.borrower.iid = req.user.iid;
             item.borrower.username = req.user.username;
-            item.borrower.ready = item.borrower.ready ? false : true;
+            item.borrower.ready = true;
+            item.duration = req.body.duration;
         }
         
         if (item.inprogress)
@@ -29,18 +42,23 @@ app.post('/item/:id/ready', (req, res) => {
             if (!item.inprogress) {
                 item.inprogress = true;
                 
-                const exchange = await Promise.fromCallback((cb) =>
-                    lib.damianreiter.enghack['@dev'].initiate({value : v, holdFor: 5, uid1: item.offerer.iid, uid2: item.borrower.iid}, (err, result) => {
-                        if (err){
-                            console.log(err);
-                        } else {
-                            console.log(result);
-                            cb(null, result);
-                        }
-                }));
+                // const exchange = await Promise.fromCallback((cb) =>
+                //     lib.damianreiter.enghack['@dev'].initiate({value : v, holdFor: item.duration, uid1: item.offerer.iid, uid2: item.borrower.iid}, (err, result) => {
+                //         if (err){
+                //             console.log(err);
+                //         } else {
+                //             console.log(result);
+                //             cb(null, result);
+                //         }
+                // }));
+                
+                //contract.createNewExchange(web3.eth.accounts[item.offerer.iid], web3.eth.accounts[item.borrower.iid], item.duration, web3.toWei(v*0.95, "ether"), function (err, res) {});
+                // , {from: web3.eth.accounts[item.borrower.iid], value: web3.toWei(v,"ether")}, function (err, res) {}
                 console.log('after');
-                item.exchangeId = exchange.id;
-                item.holdTime = exchange.duration;
+                // item.exchangeId = exchangeId;
+                item.creationTime = Date.now()/1000;
+                item.expiryTime = Date.now()/1000 + item.duration;
+                item.holdTime = item.duration;
                 var date = new Date();
                 date.setSeconds(date.getSeconds() + 10);
                 date = date.toISOString();
@@ -49,19 +67,23 @@ app.post('/item/:id/ready', (req, res) => {
             } else {
                 item.inprogress = false;
                 
-                    lib.damianreiter.enghack['@dev'].completeContract({exchangeId: item.exchangeId}, (err, result) => {
-                        if (err){
-                            console.log(err);
-                        } else {
-                            console.log(result);
-                        }
-                });
+                //     lib.damianreiter.enghack['@dev'].completeContract({exchangeId: item.exchangeId}, (err, result) => {
+                //         if (err){
+                //             console.log(err);
+                //         } else {
+                //             console.log(result);
+                //         }
+                // });
+                
+                // complete
+                //contract.completeExchange(exchangeId, function (err, res) {});
                 
                 item.borrower = {};
+                item.creationTime = 0;
+                item.expiryTime = 0;
                 
                 console.log(`ITEM ${item.name} has been returned`);
             }
- 
 
             item.borrower.ready = false;
             item.offerer.ready = false;

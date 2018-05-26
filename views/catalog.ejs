@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="../public/img/shovelicon.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
-    Garden Tool Requestals
+    Rentals
   </title>
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
 
@@ -23,7 +23,7 @@
     <div class="sidebar" data-color="green">
       <div class="logo">
         <a href="#" class="simple-text logo-normal">
-          Garden Tool Requestals
+          Rentals
         </a>
       </div>
       <div class="sidebar-wrapper">
@@ -31,7 +31,7 @@
           <li class="active ">
             <a href="/">
               <i class="now-ui-icons design_bullet-list-67"></i>
-              <p>Items Available for Rent</p>
+              <p>Items Available</p>
             </a>
           </li>
           <% if(currentUser) { %>
@@ -98,24 +98,52 @@
                         Cost
                       </th>
                       <th>
-                        Time
+                        Duration
                       </th>
                       <th>
                         Action
                       </th>
                     </thead>
                     <tbody>
-                      <%  items.forEach((item, index) => {  %>
+                      <%  items.forEach((item, index) => { %>
                       <tr>
                         <td><%= item.name %></td>
                         <td><%= item.exchangeId %></td>
                         <td><%= item.offerer.username %><% if (item.offerer.ready) { %> [Ready]<% } %></td>
                         <td><% if (item.borrower && item.borrower.username) { %><%= item.borrower.username %><% } else { %><strong>Nobody</strong><% } %></td>
                         <td><%= item.price %></td>
-                        <td><%= item.holdTime %></td>
+                        <td><% if (item.duration) { %><%= item.duration %><% } else { %> No offer </td> <% } %>
                         <td>
-                          <button type="button" class="btn" data-toggle="modal" data-target="#modal<%= index %>">Rent</button>
-                          <div class="modal" id="modal<%= index %>">
+                          <% if (currentUser && currentUser.id == item.offerer.id && item.duration == 0) {%>
+                          <button type="button" class="btn">No requests</button>
+                          <% } else if (currentUser && currentUser.id == item.offerer.id) { %>
+                          <form action="/item/<%= item.id %>/ready">
+                            <input type="hidden" value="offerer" name="ready">
+                            <button type="button" class="btn" data-toggle="modal" data-target="#modalo<%= index %>">Confirm</button>
+                          </form>
+                          <div class="modal" id="modalo<%= index %>">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h4>Requests</h4>
+                                  <button type="button" class="btn-danger" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                  <form action="/item/<%= item.id %>/ready" method="POST">
+                                    <span class="label">Item: <%= item.name %></span><br/><br/>
+                                    <input type="hidden" name="ready" value="offerer">
+                                    <span class="label">Duration: <%= item.duration %></span><br/><br/>    
+                                    <button class="btn">Approve Request</button>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <% } else { %>
+                          <% if (currentUser) { %>
+                          <button type="button" class="btn" data-toggle="modal" data-target="#modalb<%= index %>">Rent</button>
+                          <% } %>
+                          <div class="modal" id="modalb<%= index %>">
                             <div class="modal-dialog">
                               <div class="modal-content">
                                 <div class="modal-header">
@@ -124,21 +152,16 @@
                                 </div>
                                 <div class="modal-body">
                                   <form action="/item/<%= item.id %>/ready" method="POST">
-                                    <label>Item: <%= item.name %></label><br/>
-                                    <% if (currentUser && currentUser.id == item.offerer.id) { %>
-                                        <input type="hidden" name="ready" value="offerer">
-                                        <button>Ready</button>
-                                    <% } else if (currentUser && currentUser.id != item.offerer.id) { %>
-                                        <label>Duration: </label><input type="number" name="duration"><br/>
-                                        <input type="hidden" name="ready" value="borrower">
-                                        <button>Ready</button>
-                                    <% } %>
+                                    <span class="label">Item: <%= item.name %></span><br/><br/>
+                                    <span class="label">Duration(s):  </span><input type="number" name="duration"><br/><br/>
+                                    <input type="hidden" name="ready" value="borrower">
                                     <button class="btn">Submit</button>
                                   </form>
                                 </div>
                               </div>
                             </div>
                           </div>
+                          <% } %>
                         </td>
                       </tr>
                       <%  });  %>

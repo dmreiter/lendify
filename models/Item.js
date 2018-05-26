@@ -27,7 +27,10 @@ var itemSchema = mongoose.Schema({
     },
     exchangeId: Number,
     holdTime: Number,
-    dueDate: String
+    duration: Number,
+    dueDate: String,
+    creationTime: String,
+    expiryTime: String,
 });
 
 module.exports = mongoose.model("Item", itemSchema);

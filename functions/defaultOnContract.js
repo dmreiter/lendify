@@ -6,9 +6,9 @@ web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 //Set the default account to 0 (Our test application only has two accounts. Account 0 will always initiate)
 web3.eth.defaultAccount = web3.eth.accounts[0];
 //Specify settings for our contract
-var ContractFromABI = web3.eth.contract([{"constant":false,"inputs":[{"name":"lenderAddress","type":"address"},{"name":"borrowerAddress","type":"address"},{"name":"duration","type":"uint256"},{"name":"frozenAmount","type":"uint256"}],"name":"createNewExchange","outputs":[{"name":"","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"exchangeId","type":"uint256"}],"name":"completeExchange","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"exchangeId","type":"uint256"}],"name":"lenderRequestsMoney","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]);
+var ContractFromABI = web3.eth.contract([{"constant":false,"inputs":[{"name":"exchangeId","type":"uint256"}],"name":"completeExchange","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"lenderAddress","type":"address"},{"name":"borrowerAddress","type":"address"},{"name":"duration","type":"uint256"},{"name":"frozenAmount","type":"uint256"}],"name":"createNewExchange","outputs":[{"name":"","type":"uint256"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[{"name":"exchangeId","type":"uint256"}],"name":"lenderRequestsMoney","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]);
 //Specify the id of the contract in our network
-var contract = ContractFromABI.at('0xc866af1e5c5546d50aa1207698bb8e39578d2144');
+var contract = ContractFromABI.at('0xd022b2e644c614bbb8391eae0db5d0182c779882');
 
 /**
 * Function to initiate a transaction

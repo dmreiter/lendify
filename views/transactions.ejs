@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="../public/img/shovelicon.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
-    Garden Tool Rentals
+    Rentals
   </title>
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
 
@@ -23,7 +23,7 @@
     <div class="sidebar" data-color="green">
       <div class="logo">
         <a href="#" class="simple-text logo-normal">
-          Garden Tool Rentals
+          Rentals
         </a>
       </div>
       <div class="sidebar-wrapper">
@@ -31,7 +31,7 @@
           <li>
             <a href="/">
               <i class="now-ui-icons design_bullet-list-67"></i>
-              <p>Items Available for Rent</p>
+              <p>Items Available</p>
             </a>
           </li>
           <% if(currentUser) { %>
@@ -100,6 +100,9 @@
                         Time
                       </th>
                       <th>
+                        Status
+                      </th>
+                      <th>
                         Action
                       </th>
                     </thead>
@@ -109,9 +112,44 @@
                         <td><%= item.name %></td>
                         <td><%= item.exchangeId %></td>
                         <td><%= item.offerer.username %><% if (item.offerer.ready) { %> [Ready]<% } %></td>
-                        <td><% if (item.borrower && item.borrower.username) { %><%= item.borrower.username %><% } else { %><strong>Nobody</strong><% } %></td>
+                        <td><%= item.borrower.username %></td>
                         <td><%= item.price %></td>
-                        <td><%= item.holdTime %></td>
+                        <td><%= item.duration %></td>
+                        <% if (Date.now()/1000 > item.expiryTime) { %> 
+                          <td>Expired</td>
+                          <td>
+                            <% if (currentUser && currentUser.id == item.offerer.id) { %>
+                              <form>
+                                <button type="button" class="btn">Collect Collateral</button>
+                              </form>
+                            <% } else { %>
+                              <button type="button" class="btn" disabled>None</button>
+                            <% } %>
+                          </td>
+                        <% } else { %> 
+                          <td>In Progress</td>
+                          <td>
+                            <% if (currentUser && currentUser.id == item.offerer.id) { %>
+                              <% if (item.offerer.ready) { %>
+                                  <button class="btn" disabled>Closed</button>
+                                <% } else { %>
+                                  <form action="/item/<%= item.id %>/ready" method="POST">
+                                    <input type="hidden" value="offerer" name="ready">
+                                    <button class="btn">Close</button>
+                                  </form>
+                                <% } %>
+                            <% } else if (currentUser && currentUser.id == item.borrower.id) { %>
+                              <% if (item.borrower.ready) { %>
+                                <button class="btn" disabled>Closed</button>
+                              <% } else { %>
+                                <form action="/item/<%= item.id %>/ready" method="POST">
+                                  <input type="hidden" value="borrower" name="ready">
+                                  <button class="btn">Close</button>
+                                </form>
+                              <% } %>
+                            <% } %>
+                          </td>
+                        <% } %>
                       </tr>
                       <%  });  %>
                     </tbody>

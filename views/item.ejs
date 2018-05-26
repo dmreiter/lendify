@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <title><%= item.name %></title>
+    </head>
+    <body>
+        <% if (currentUser && currentUser.id == item.offerer.id) { %>
+            You are the offerer of this item
+        <% } %>
+        <li><%= item.name %></li>
+        <li><%= item.price %></li>
+        <li><%= item.desc %></li>
+        <form action="/item/<%= item._id %>/ready" method="post">
+            <% if (currentUser && currentUser.id == item.offerer.id) { %>
+                <input type="hidden" name="ready" value="offerer">
+                <button>Ready</button>
+            <% } else if (currentUser && currentUser.id != item.offerer.id) { %>
+                <input type="hidden" name="ready" value="borrower">
+                <button>Ready</button>
+            <% } %>
+        </form>
+    </body>
+</html>

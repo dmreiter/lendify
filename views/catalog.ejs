@@ -98,7 +98,7 @@
                         Cost
                       </th>
                       <th>
-                        Time
+                        Max Duration
                       </th>
                       <th>
                         Action
@@ -124,12 +124,12 @@
                                 </div>
                                 <div class="modal-body">
                                   <form action="/item/<%= item.id %>/ready" method="POST">
-                                    <label>Item: <%= item.name %></label><br/>
+                                    <span class="label">Item: <%= item.name %></span><br/><br/>
                                     <% if (currentUser && currentUser.id == item.offerer.id) { %>
                                         <input type="hidden" name="ready" value="offerer">
                                         <button>Ready</button>
                                     <% } else if (currentUser && currentUser.id != item.offerer.id) { %>
-                                        <label>Duration: </label><input type="number" name="duration"><br/>
+                                        <span class="label">Duration: </span><input type="number" name="duration"><br/><br/>
                                         <input type="hidden" name="ready" value="borrower">
                                         <button>Ready</button>
                                     <% } %>

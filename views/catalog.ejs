@@ -98,7 +98,11 @@
                         Cost
                       </th>
                       <th>
+<<<<<<< HEAD
                         Duration
+=======
+                        Max Duration
+>>>>>>> f68f4bad5280a59870d5bb15cbdfdc5be8784e6f
                       </th>
                       <th>
                         Action
@@ -153,8 +157,19 @@
                                 <div class="modal-body">
                                   <form action="/item/<%= item.id %>/ready" method="POST">
                                     <span class="label">Item: <%= item.name %></span><br/><br/>
+<<<<<<< HEAD
                                     <span class="label">Duration(s):  </span><input type="number" name="duration"><br/><br/>
                                     <input type="hidden" name="ready" value="borrower">
+=======
+                                    <% if (currentUser && currentUser.id == item.offerer.id) { %>
+                                        <input type="hidden" name="ready" value="offerer">
+                                        <button>Ready</button>
+                                    <% } else if (currentUser && currentUser.id != item.offerer.id) { %>
+                                        <span class="label">Duration: </span><input type="number" name="duration"><br/><br/>
+                                        <input type="hidden" name="ready" value="borrower">
+                                        <button>Ready</button>
+                                    <% } %>
+>>>>>>> f68f4bad5280a59870d5bb15cbdfdc5be8784e6f
                                     <button class="btn">Submit</button>
                                   </form>
                                 </div>

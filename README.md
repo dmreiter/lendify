@@ -1,6 +1,6 @@
 # Lendify
 
-EngHack @ UWaterloo 2018. Winner of Best Hack.
+EngHack @ UWaterloo 2018. One of 3 winners of Best Hack.
 https://devpost.com/software/lendify
 
 # Inspiration

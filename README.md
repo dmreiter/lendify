@@ -1,6 +1,7 @@
 # Lendify
 
 EngHack @ UWaterloo 2018. Winner of Best Hack.
+https://devpost.com/software/lendify
 
 # Inspiration
 We were inspired by companies like Uber and Airbnb who found ways to connect product owners and service providers with people who needed such products or services. We wanted to generalize this idea of lenders and borrowers of goods/services and apply it to anything we could thing of, not just bnbs and transportation. We also wanted to make this system self sustainable and decentralized, so we decided to use an ethereum blockchain and smart contract service to completely automate the exchange of assets and collateral in a very secure, self-validating way.
